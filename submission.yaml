@@ -1,0 +1,15 @@
+version: 1
+student:
+  name: "chenjunhong"
+  github_id: "WHUTcjh-2024"
+topic:
+  id: "二"
+  title: "可视化沙箱工作台"
+result:
+  type: code
+  url: "https://github.com/WHUTcjh-2024/WeKnora/tree/rhino-2026-final-2"
+repository:
+  url: "https://github.com/WHUTcjh-2024/WeKnora.git"
+  branch: "feat/rhino-topic2-final"
+  commit: "5d7b30e440606bf76fb57ac4c3fa740db9f3ef3d"
+  tag: "rhino-2026-final-2"
