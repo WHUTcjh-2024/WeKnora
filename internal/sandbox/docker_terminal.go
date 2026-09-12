@@ -27,7 +27,7 @@ const dockerTerminalExitInspectPoll = 25 * time.Millisecond
 // OpenTerminal starts an interactive bash in the container behind handle.
 // AttachPID is deliberately ignored: Docker can reconnect the container, but
 // POST /exec/{id}/start cannot attach a second stream to a running exec (see
-// DOCKER_REATTACH_SPIKE.md).
+// docs/poc/docker-terminal-reattach-spike.md).
 func (c *DockerRemoteClient) OpenTerminal(
 	ctx context.Context,
 	handle RemoteSandboxHandle,
@@ -100,9 +100,12 @@ func (c *DockerRemoteClient) OpenTerminal(
 	go session.watchContext()
 
 	if ttl := c.terminalIdleTTL(handle); ttl > 0 {
-		startTerminalTTLRefresh(terminalCtx, session.closedCh, ttl, func(refreshCtx context.Context) error {
-			return c.refreshActivity(refreshCtx, containerID, "terminal activity")
-		})
+		startTerminalTTLRefreshAfterInitialTouch(
+			terminalCtx, session.closedCh, ttl,
+			func(refreshCtx context.Context) error {
+				return c.refreshActivity(refreshCtx, containerID, "terminal activity")
+			},
+		)
 	}
 	return session, nil
 }

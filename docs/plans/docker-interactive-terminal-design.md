@@ -2,14 +2,14 @@
 
 ## Status and baseline
 
-- Phase: PR-01 design gate; no production code has been changed by this phase.
+- Status: implemented and validated in PR #3175; retained as the design record.
 - Source of truth: `Tencent/WeKnora` `upstream/main`.
 - Baseline SHA: `5db13a131e10e8ee2105211f665412ebc13bd98e`.
 - Baseline date: 2026-09-10 (Asia/Shanghai).
 - Scope: add Docker as the third implementation of the existing interactive session-terminal abstraction.
 - Out of scope: Files, terminal Audit, resource-limit redesign, ArtifactKind, Presentation Skill, a second terminal abstraction, a second WebSocket/ticket flow, and Docker-specific frontend terminal UI.
 
-The implementation must look like the existing E2B/Cube adapter family:
+The implementation follows the existing E2B/Cube adapter family:
 
 ```text
 RemoteTerminalManager
@@ -18,8 +18,6 @@ RemoteTerminalManager
   -> dockerTerminalSession
        -> pump / Output / PID / Write / Resize / Close
 ```
-
-Open PR review found `#3146 Feat/sandbox workbench` as the nearest competing Topic-2 work. At review time it changed 126 files (+15,480/-328), introduced a separate `CommandTerminal` and Workbench stack, had an empty PR template body, and was merge-dirty. It is useful only as evidence that command-budget and file-security concerns exist; it is not the architecture baseline for this PR. Open draft `#3168` concerns office skills/browser controls and is unrelated to Docker terminal implementation.
 
 ## A. Provider capability comparison
 
@@ -38,6 +36,8 @@ Open PR review found `#3146 Feat/sandbox workbench` as the nearest competing Top
 | sandbox TTL/activity | `SetTimeoutWithContext` via `startTerminalTTLRefresh` | `SetTimeout` via `startTerminalTTLRefresh` | Touch the existing Docker activity marker when the shell starts, then use a low-frequency heartbeat while the terminal is open. Reuse `startTerminalTTLRefresh` timing and perform one bounded marker refresh per interval, never one Engine RPC per keystroke |
 | errors | `normalizeE2BError` | `normalizeCubeError` | Every Engine failure is wrapped with `dockerError` and a terminal-specific operation name; invalid/mismatched handles use `dockerHandleID`/`dockerInvalidRequest` |
 | output shutdown | pump alone closes `out` | pump alone closes `out` | pump is the sole closer of `out`; all sends use `emitTerminalEvent`; `Close` only signals teardown and closes transport |
+
+Docker interactive terminal support requires `/bin/bash` in the configured image. The standard WeKnora sandbox image satisfies this contract. A custom image without `/bin/bash` may still support ordinary sandbox `Exec` operations, but interactive terminal availability is not guaranteed.
 
 ### Docker create and stream details
 
@@ -80,15 +80,15 @@ Docker's idle sweeper reads `/var/lib/weknora-sandbox-activity`. Ordinary non-TT
 The terminal path will:
 
 1. Touch the marker as part of the trusted shell bootstrap before `exec bash`, avoiding a separate open-time Engine round trip.
-2. Start `startTerminalTTLRefresh` with the configured/effective Docker idle TTL.
+2. Start `startTerminalTTLRefreshAfterInitialTouch` with the configured/effective Docker idle TTL, so the first provider refresh waits for the normal interval.
 3. On each low-frequency refresh, execute one bounded provider-local marker refresh (expected to reuse the existing non-TTY `Exec(..., command=true)` path).
 4. Stop refresh immediately on `Close`, context cancellation, or shell exit.
 
-This keeps an active terminal ahead of the sweeper without making keystrokes trigger Docker API traffic. Real integration uses a shortened test TTL/refresh interval and asks the real sweeper decision path to confirm the terminal-only container is not idle after remaining open beyond its TTL.
+This keeps an active terminal ahead of the sweeper without making keystrokes trigger Docker API traffic. The minimum non-zero Docker idle TTL is 60 seconds, while the production refresh floor is 15 seconds; unit tests pin that every valid Docker TTL exceeds its refresh interval. Real integration observes the activity marker advance on the production interval and asks the real sweeper decision path to preserve the active terminal container.
 
 ### Reconnect decision
 
-`DOCKER_REATTACH_SPIKE.md` records the real-daemon result: after the initial hijacked transport closes, the exec remains `Running=true`, but a second `ExecAttach` stream says `exec command ... is already running` and immediately reaches EOF. No command can be sent to the original PTY. Docker Engine therefore does not provide the `Connect(PID)` behavior exposed by E2B/Cube.
+The [Docker reattach spike](../poc/docker-terminal-reattach-spike.md) records the real-daemon result: after the initial hijacked transport closes, the exec remains `Running=true`, but a second `ExecAttach` stream says `exec command ... is already running` and immediately reaches EOF. No command can be sent to the original PTY. Docker Engine therefore does not provide the `Connect(PID)` behavior exposed by E2B/Cube.
 
 PR-01 must not map a new bash process to the old PID or report it as a successful reattach. The minimal capability correction is provider-neutral:
 
@@ -176,7 +176,7 @@ Record Engine API/version, OS/architecture, image digest/tag, exact command, and
 9. Record whether closing the second transport changes process state.
 10. Force-remove the isolated temporary container in cleanup.
 
-The outcome and raw observations go into `DOCKER_REATTACH_SPIKE.md`.
+The outcome and raw observations are recorded in the [Docker reattach spike](../poc/docker-terminal-reattach-spike.md).
 
 ### PR-01 real integration matrix
 

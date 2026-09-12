@@ -5589,6 +5589,7 @@ export default {
       dockerIdleTtlHelp: 'Docker 守护进程本身没有空闲超时。容器多久没有执行任何命令就会被 WeKnora 回收，会话继续时重建。留空按 1800 秒。',
       dockerHardLifetime: '最长存活时间（秒）',
       dockerHardLifetimeHelp: '不受活动影响的容器最长存活时间。超过后强制删除沙箱；0 表示禁用。',
+      dockerIdleTtlMinimum: '填写 0 使用内置默认值，或填写至少 60 秒。',
       dockerCpuLimit: 'CPU 核数上限',
       dockerCpuLimitHelp: '单个沙箱可用的 CPU 核数。该配置只限制 CPU 速率，不负责终止；0 使用内置默认。',
       dockerCpuTimeLimit: 'CPU 时间预算（秒）',

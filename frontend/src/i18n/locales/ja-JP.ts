@@ -1428,6 +1428,7 @@ export default {
       dockerIdleTtlHelp: 'Dockerデーモン自体にはアイドルタイムアウトがありません。この時間コマンドが実行されなかったコンテナはWeKnoraが回収し、セッションが続く場合は再作成します。空欄の場合は1800秒です。',
       dockerHardLifetime: '最大存続時間（秒）',
       dockerHardLifetimeHelp: 'アクティビティに関係なく適用されるコンテナの最大存続時間です。超過するとサンドボックスを強制削除します。0で無効になります。',
+      dockerIdleTtlMinimum: '0で組み込みのデフォルトを使用するか、60秒以上を入力してください。',
       dockerCpuLimit: 'CPUコア数の上限',
       dockerCpuLimitHelp: 'サンドボックス1つが使用できるCPUコア数です。CPU速度を制限するもので、終了条件ではありません。0の場合は組み込みのデフォルトを使用します。',
       dockerCpuTimeLimit: 'CPU時間の上限（秒）',

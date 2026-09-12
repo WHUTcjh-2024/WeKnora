@@ -1,6 +1,11 @@
 import { onUnmounted, ref, type Ref } from 'vue'
 import { post } from '@/utils/request'
 import { readStoredPtyId, writeStoredPtyId } from '@/utils/sandboxPtyId'
+import {
+  appendTerminalPtyId,
+  decideTerminalReconnect,
+  terminalReadyPtyId,
+} from './sandboxTerminalReconnect'
 
 export type SandboxTerminalStatus =
   /** 查询到会话沙箱已暂停；唤醒需要用户确认。 */
@@ -172,6 +177,10 @@ export function useSandboxTerminal(
     if (disposed || opening || ws) return
     const sid = sessionId.value
     if (!sid) return
+    // A socket that disappears before its ready frame may already have caused
+    // the server to create a non-reattachable Docker exec. Do not retry that
+    // ambiguous handshake automatically.
+    let readyReceived = false
 
     opening = true
     status.value = 'connecting'
@@ -191,9 +200,7 @@ export function useSandboxTerminal(
           query.set('agent_source_tenant_id', String(sourceTenant).trim())
         }
       }
-      if (reattachable && lastPid && lastPid > 0) {
-        query.set('pty_id', String(lastPid))
-      }
+      appendTerminalPtyId(query, reattachable, lastPid)
       if (pendingGeometry) {
         query.set('cols', String(pendingGeometry.cols))
         query.set('rows', String(pendingGeometry.rows))
@@ -229,7 +236,8 @@ export function useSandboxTerminal(
 
     ws.onmessage = (event) => {
       if (typeof event.data === 'string') {
-        handleControlFrame(event.data)
+        const frame = handleControlFrame(event.data)
+        if (frame?.type === 'ready') readyReceived = true
         return
       }
       const data =
@@ -262,25 +270,13 @@ export function useSandboxTerminal(
         }
         return
       }
-      // A provider without same-PTY reconnect would create a fresh shell on
-      // every automatic retry and strand the old exec. Stop here and let the
-      // existing Retry action explicitly start a new terminal.
-      if (!reattachable) {
-        status.value = 'error'
-        return
-      }
-      if (
-        status.value !== 'needs_provision'
-        && status.value !== 'paused'
-        && status.value !== 'no_sandbox'
-        && status.value !== 'unsupported'
-        && status.value !== 'exited'
-        && status.value !== 'idle'
-        && status.value !== 'unauthorized'
-      ) {
-        status.value = 'error'
-        scheduleReconnect()
-      }
+      const decision = decideTerminalReconnect({
+        readyReceived,
+        reattachable,
+        status: status.value,
+      })
+      status.value = decision.status
+      if (decision.shouldReconnect) scheduleReconnect()
     }
 
     ws.onerror = () => {
@@ -288,20 +284,18 @@ export function useSandboxTerminal(
     }
   }
 
-  function handleControlFrame(raw: string) {
+  function handleControlFrame(raw: string): SandboxTerminalControlFrame | null {
     let frame: SandboxTerminalControlFrame
     try {
       frame = JSON.parse(raw)
     } catch {
-      return
+      return null
     }
     switch (frame.type) {
       case 'ready':
         status.value = 'ready'
         reattachable = frame.reattachable !== false
-        rememberPid(
-          reattachable && typeof frame.pty_id === 'number' ? frame.pty_id : null,
-        )
+        rememberPid(terminalReadyPtyId(reattachable, frame.pty_id))
         reconnectAttempt = 0
         // 创建意图到此为止。它只用来解释 SANDBOX_NOT_BOUND：连上之前是"还没
         // 有沙箱，要不要建"，连上之后再收到就一定是"沙箱被回收了"。不复位会
@@ -327,6 +321,7 @@ export function useSandboxTerminal(
       default:
         break
     }
+    return frame
   }
 
   function deliverOutput(data: Uint8Array) {

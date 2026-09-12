@@ -5587,6 +5587,7 @@ export default {
       dockerIdleTtlHelp: 'The Docker daemon has no idle timeout of its own. A container that runs no command for this long is reclaimed by WeKnora and rebuilt when the session continues. Empty means 1800 seconds.',
       dockerHardLifetime: 'Hard lifetime (seconds)',
       dockerHardLifetimeHelp: 'Maximum container age regardless of activity. The sandbox is force-removed when exceeded; 0 disables this limit.',
+      dockerIdleTtlMinimum: 'Use 0 for the built-in default, or enter at least 60 seconds.',
       dockerCpuLimit: 'CPU cores',
       dockerCpuLimitHelp: 'CPU cores available to one sandbox. This throttles CPU capacity rather than terminating it; 0 uses the built-in default.',
       dockerCpuTimeLimit: 'CPU time budget (seconds)',
