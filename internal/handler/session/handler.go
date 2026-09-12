@@ -52,6 +52,10 @@ type Handler struct {
 	// auditService receives sanitized commands emitted by the current
 	// interactive terminal's shell integration.
 	auditService interfaces.AuditLogService
+	// liveFilesService browses the current session sandbox's fixed
+	// /workspace/output root. The interface keeps handler authorization tests
+	// independent from provider setup.
+	liveFilesService sandboxLiveFilesService
 }
 
 // NewHandler creates a new instance of Handler with all necessary dependencies
@@ -79,6 +83,7 @@ func NewHandler(
 	memberService interfaces.TenantMemberService,
 	terminalService *service.SandboxTerminalService,
 	auditService interfaces.AuditLogService,
+	liveFilesService *service.SandboxLiveFilesService,
 	browserSkill *browserskill.Manager,
 ) *Handler {
 	return &Handler{
@@ -104,6 +109,7 @@ func NewHandler(
 		memberService:        memberService,
 		terminalService:      terminalService,
 		auditService:         auditService,
+		liveFilesService:     liveFilesService,
 		attachmentProcessor: NewAttachmentProcessor(
 			fileService,
 			documentReader,
