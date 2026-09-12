@@ -65,6 +65,11 @@ func RegisterSessionRoutes(
 		sessions.DELETE("/:id/attachments/:attachment_id", handler.DeleteTemporaryDocument)
 		sessions.POST("/:session_id/stop", handler.StopSession)
 		sessions.POST("/:session_id/sandbox/terminal-ticket", handler.IssueSandboxTerminalTicket)
+		sessions.GET("/:id/sandbox/files", handler.ListSandboxLiveFiles)
+		sessions.GET("/:id/sandbox/files/content", handler.DownloadSandboxLiveFile)
+		sessions.POST("/:session_id/sandbox/files", handler.UploadSandboxLiveFile)
+		sessions.PATCH("/:id/sandbox/files", handler.RenameSandboxLiveFile)
+		sessions.DELETE("/:id/sandbox/files", handler.DeleteSandboxLiveFile)
 		sessions.GET("/:id/local-browser", handler.BrowserSkillConnection)
 		sessions.POST("/:session_id/local-browser", handler.BrowserSkillConnection)
 		// Mid-run message injection: append a user message to the turn that is
