@@ -14,7 +14,7 @@ set -euo pipefail
 cd "$(dirname "$0")/.."
 
 # Doc surface to scan (where a pasted live token is the real risk).
-FILES=$(git ls-files 'skills/**/*.md' 'README.md' 'AGENTS.md' 'CHANGELOG.md' 'ROADMAP.md' 2>/dev/null || true)
+FILES=$(git ls-files 'skills/**/*.md' 'README.md' 'CLI_CONTRACT.md' 'CHANGELOG.md' 'ROADMAP.md' 2>/dev/null || true)
 [ -z "$FILES" ] && { echo "no doc files to scan"; exit 0; }
 
 # sk- key: prefix + >=24 body chars including at least one digit.

@@ -450,7 +450,7 @@ All notable changes to this project will be documented in this file.
 
 - **DOC**: New `docs/日志配置.md` (logging configuration guide).
 - **DOC**: OpenSearch integration-test guide (`docs/dev/opensearch-integration-test.md`).
-- **DOC**: CLI — `AGENTS.md`, `README.md`, and `CHANGELOG.md` brought in sync with the v0.7 / v0.8 surface.
+- **DOC**: CLI — `CLI_CONTRACT.md`, `README.md`, and `CHANGELOG.md` brought in sync with the v0.7 / v0.8 surface.
 - **DOC**: Clarified cached-token semantics for explicit-cache providers in chat docs.
 
 ## [0.6.0] - 2026-05-21
@@ -560,7 +560,7 @@ All notable changes to this project will be documented in this file.
 - **DOC**: New `docs/RBAC说明.md` (Chinese RBAC guide) and `docs/wiki/安全认证/RBAC说明.md`, linked with shared space docs.
 - **DOC**: `docs/RBAC` documents Contributor vs `OwnedXxxOrAdmin` selection rule.
 - **DOC**: Issue templates require concrete app/UI versions (not "latest").
-- **DOC**: CLI — `cli/README.md`, `cli/AGENTS.md` + `cli/CHANGELOG.md` brought in sync with v0.3 / v0.4 surface; stale e2e refs cleared; CI parity test added.
+- **DOC**: CLI — `cli/README.md`, `cli/CLI_CONTRACT.md` + `cli/CHANGELOG.md` brought in sync with v0.3 / v0.4 surface; stale e2e refs cleared; CI parity test added.
 
 ## [0.5.2] - 2026-05-13
 
@@ -569,7 +569,7 @@ All notable changes to this project will be documented in this file.
   - Hybrid search and streaming RAG chat against any knowledge base.
   - Project-level binding via `weknora link` writing `.weknora/project.yaml` (vercel/netlify pattern); subcommands auto-resolve `--kb` from the link.
   - Stable JSON envelope (`{ok, data, error, _meta, dry_run, risk}`) on every `--json` invocation; closed error-code registry enforced by an AST scanner test.
-  - Agent affordance: `--dry-run` for write commands, exit-code 10 + `input.confirmation_required` for non-interactive destructive writes, per-command "AI agents:" guidance auto-shown when CLAUDECODE / CURSOR_AGENT is set. Operational contract in `cli/AGENTS.md`.
+  - Agent affordance: `--dry-run` for write commands, exit-code 10 + `input.confirmation_required` for non-interactive destructive writes, per-command "AI agents:" guidance auto-shown when CLAUDECODE / CURSOR_AGENT is set. Operational contract in `cli/CLI_CONTRACT.md`.
   - Multi-context auth (`login` / `logout` / `list` / `status`), OS keyring + 0600 file fallback for credentials, both API-key and password (JWT) modes.
   - Health check via `weknora doctor` (4 statuses: ok / warn / fail / skip).
   - See `cli/README.md` for install + 5-minute quickstart.
@@ -650,7 +650,7 @@ All notable changes to this project will be documented in this file.
 - **DOC**: New `docs/zh/mcp-approval.md` describing the MCP human-in-the-loop approval flow.
 - **DOC**: New `docs/cloud-image/README.md` and `docs/cloud-image/tencent-lighthouse.md` covering cloud-image packaging.
 - **DOC**: API documentation — Swagger annotations restored across handlers, Swagger regenerated via `make docs`, and the hand-written `docs/api/*.md` rewritten to match current routes. Includes a new `docs/api/auth.md`.
-- **DOC**: New `cli/README.md`, `cli/AGENTS.md`, top-level CLI mention added to main README, plus a CHANGELOG and ADR section under `cli/`.
+- **DOC**: New `cli/README.md`, `cli/CLI_CONTRACT.md`, top-level CLI mention added to main README, plus a CHANGELOG and ADR section under `cli/`.
 
 ## [0.5.1] - 2026-04-30
 

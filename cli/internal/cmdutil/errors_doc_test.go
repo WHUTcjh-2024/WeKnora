@@ -7,12 +7,12 @@ import (
 	"testing"
 )
 
-// loadErrorReferenceSection returns the body of the cli/AGENTS.md "Error code
+// loadErrorReferenceSection returns the body of the cli/CLI_CONTRACT.md "Error code
 // reference" section, delimited by the ERROR_REFERENCE_START/END markers.
 func loadErrorReferenceSection(t *testing.T) string {
 	t.Helper()
-	// From cli/internal/cmdutil/, go up two levels to find cli/AGENTS.md.
-	docPath, err := filepath.Abs("../../AGENTS.md")
+	// From cli/internal/cmdutil/, go up two levels to find cli/CLI_CONTRACT.md.
+	docPath, err := filepath.Abs("../../CLI_CONTRACT.md")
 	if err != nil {
 		t.Fatalf("abs: %v", err)
 	}
@@ -57,13 +57,13 @@ func documentedCodes(refSection string) []string {
 	return codes
 }
 
-// TestAllCodes_DocumentedInAGENTS verifies every typed code returned by
-// AllCodes() surfaces in cli/AGENTS.md "Error code reference" section
+// TestAllCodes_DocumentedInCLIContract verifies every typed code returned by
+// AllCodes() surfaces in cli/CLI_CONTRACT.md "Error code reference" section
 // (delimited by ERROR_REFERENCE_START/END markers).
 //
 // Prevents drift: a contributor adding a new ErrorCode without updating
 // the doc fails this test, forcing the doc to stay current.
-func TestAllCodes_DocumentedInAGENTS(t *testing.T) {
+func TestAllCodes_DocumentedInCLIContract(t *testing.T) {
 	refSection := loadErrorReferenceSection(t)
 
 	missing := []string{}
@@ -74,13 +74,13 @@ func TestAllCodes_DocumentedInAGENTS(t *testing.T) {
 		}
 	}
 	if len(missing) > 0 {
-		t.Errorf("the following error codes are registered in AllCodes() but not listed in cli/AGENTS.md \"Error code reference\" section between the ERROR_REFERENCE markers:\n  - %s\n\nAdd a row for each missing code to keep agent-facing docs in sync.",
+		t.Errorf("the following error codes are registered in AllCodes() but not listed in cli/CLI_CONTRACT.md \"Error code reference\" section between the ERROR_REFERENCE markers:\n  - %s\n\nAdd a row for each missing code to keep agent-facing docs in sync.",
 			strings.Join(missing, "\n  - "))
 	}
 }
 
 // TestDocumentedCodes_RegisteredInAllCodes is the reverse of
-// TestAllCodes_DocumentedInAGENTS: every code the doc advertises must still be
+// TestAllCodes_DocumentedInCLIContract: every code the doc advertises must still be
 // a code the CLI can emit.
 //
 // Without this direction a removed code lingers in the doc forever, and agents
@@ -108,7 +108,7 @@ func TestDocumentedCodes_RegisteredInAllCodes(t *testing.T) {
 		}
 	}
 	if len(stale) > 0 {
-		t.Errorf("the following error codes are documented in cli/AGENTS.md "+
+		t.Errorf("the following error codes are documented in cli/CLI_CONTRACT.md "+
 			"\"Error code reference\" but are not registered in AllCodes():\n  - %s\n\n"+
 			"Drop the row if the code was removed, or register the code if the row is correct.",
 			strings.Join(stale, "\n  - "))

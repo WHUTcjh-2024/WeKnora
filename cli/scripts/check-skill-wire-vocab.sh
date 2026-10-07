@@ -21,14 +21,14 @@ BANNED=(
   "retry_command:retry_argv (error envelope field renamed in v0.10)"
 )
 
-# Current-truth sources only. AGENTS.md is the authoritative wire contract that
+# Current-truth sources only. CLI_CONTRACT.md is the authoritative wire contract that
 # skills are condensed from — a rename that lands in skills/ but not here leaves
 # the source of truth wrong.
 #
 # CHANGELOG.md and README.md are deliberately NOT scanned. Both will name
 # legacy terms when recording a rename or writing upgrade notes for agents
 # moving between CLI versions; scanning them would guarantee a false positive.
-SCAN_TARGETS=(skills/ AGENTS.md)
+SCAN_TARGETS=(skills/ CLI_CONTRACT.md)
 
 # The v0.10 retry_command miss happened because the scan silently covered less
 # than the docs that needed covering. Fail loudly if a target disappears rather

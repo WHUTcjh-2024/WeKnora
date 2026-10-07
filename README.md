@@ -226,7 +226,7 @@ For headless / CI use, set `WEKNORA_API_KEY` + `WEKNORA_HOST` and skip
 `auth login` entirely — no credentials written to disk.
 
 See [`cli/README.md`](./cli/README.md) for install + 5-minute quickstart and
-[`cli/AGENTS.md`](./cli/AGENTS.md) for the operational contract AI agents rely on.
+[`cli/CLI_CONTRACT.md`](./cli/CLI_CONTRACT.md) for the operational contract AI agents rely on.
 
 ## 🚀 Getting Started
 

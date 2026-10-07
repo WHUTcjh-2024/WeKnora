@@ -37,7 +37,7 @@ Available Commands:
 ```
 
 The wire contract for AI agents is documented [below](#wire-contract).
-For contributing to the CLI source, see [AGENTS.md](AGENTS.md).
+For contributing to the CLI source, see [CLI_CONTRACT.md](CLI_CONTRACT.md).
 
 ---
 
@@ -137,9 +137,9 @@ For AI agents (any MCP-capable host) integrating WeKnora:
    ```json
    {"mcpServers": {"weknora": {"command": "weknora", "args": ["mcp", "serve"]}}}
    ```
-4. Read the [wire contract](AGENTS.md#wire-contract-for-ai-agents) before
+4. Read the [wire contract](CLI_CONTRACT.md#wire-contract-for-ai-agents) before
    parsing `--format json` output.
-5. Read the [exit-10 anti-patterns](AGENTS.md#exit-10-anti-patterns) before
+5. Read the [exit-10 anti-patterns](CLI_CONTRACT.md#exit-10-anti-patterns) before
    any destructive call.
 
 **Bundled Agent Skills.** This CLI ships [Agent Skills](https://agentskills.io/specification)
@@ -205,7 +205,7 @@ Designed to be AI-agent-first. Stable across minor releases; breaking
 changes announced in the changelog and the corresponding
 `weknora --version` bump. This section is the human overview; the complete,
 authoritative contract (envelope field stability, error taxonomy, streaming,
-confirmation and dry-run protocols) lives in **[AGENTS.md](AGENTS.md)**.
+confirmation and dry-run protocols) lives in **[CLI_CONTRACT.md](CLI_CONTRACT.md)**.
 
 ### Streams
 
@@ -253,7 +253,7 @@ hint: run `weknora auth login`
 
 Under `--format json` the same failure is the typed error envelope on stderr
 (`{ok:false, error:{type, exit_code, hint?, retry_argv?, …}}`) — see
-[AGENTS.md §1.4](AGENTS.md) for the field-by-field contract and the full code
+[error code reference](CLI_CONTRACT.md#error-code-reference) for the field-by-field contract and the full code
 taxonomy.
 
 ### Exit codes
@@ -400,7 +400,7 @@ Pass `--modified-args '{"key":"value"}'` to replace tool arguments on approve (m
 
 Server-side buffer TTL: 1 hour for redis mode; process lifetime for memory mode (default). After TTL, expect `local.sse_stream_aborted` typed error.
 
-See `cli/AGENTS.md` "Stream recovery" section for the full agent contract.
+See the [stream recovery contract](CLI_CONTRACT.md#stream-recovery) for details.
 
 ---
 
@@ -455,7 +455,7 @@ macOS / Windows × Go 1.26, path-filtered to changes under `cli/`.
   [SECURITY.md](../SECURITY.md). Do not file public issues for
   security findings.
 - **Pull requests**: the developer guide for editing the CLI lives in
-  [AGENTS.md](AGENTS.md) (build / test / command-surface design SOP /
+  [CLI_CONTRACT.md](CLI_CONTRACT.md) (build / test / command-surface design SOP /
   CRUD flag conventions). Run `go test ./... -race -count=1` and `go vet ./...`
   before submitting.
 

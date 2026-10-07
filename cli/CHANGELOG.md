@@ -100,7 +100,7 @@ CLI history before v0.3 is recorded in the project root
 - MCP `Tool.Annotations` on all 10 MCP serve tools (`destructiveHint` / `readOnlyHint` / `idempotentHint` / `openWorldHint` + `Title`) per MCP spec 2025-06-18.
 - `cli/internal/cmdutil/risk.go`: `SetRisk(cmd, action)` helper + `RiskDestructive` const + `GetRisk(cmd)` reader.
 - Help output "Risk: <action> (<level>)" line at top of 9 destructive commands' `--help` (via modified `SetAgentHelp` wrapper).
-- `cli/AGENTS.md` sections: Stream recovery / Dry-run contract / Risk metadata.
+- `cli/CLI_CONTRACT.md` sections: Stream recovery / Dry-run contract / Risk metadata.
 - `cli/README.md` sections: Dry-run preview / Resuming streams.
 
 #### Changed
@@ -243,7 +243,7 @@ CLI history before v0.3 is recorded in the project root
   block in `--help` to set explicit expectations around `-y/--yes`.
 
 #### Changed
-- `AGENTS.md` adds `## Wire contract for AI agents`, `## Deliberate deviations
+- `CLI_CONTRACT.md` adds `## Wire contract for AI agents`, `## Deliberate deviations
   + mainstream alignments`, `## Pre-1.0 breaking policy`, `## Exit-10
   anti-patterns` sections.
 - `README.md` adds `### Agent quick start` under `## Wire contract`.
@@ -322,7 +322,7 @@ CLI history before v0.3 is recorded in the project root
   shape, activated by `WEKNORA_AGENT_HELP=1` at `--help` time. Applied
   to `chat` and `kb list` as proof-of-pattern; extending to another
   command requires touching only that command's `NewCmd`.
-- **`cli/AGENTS.md`** gains an "Error code reference" section (35 typed
+- **`cli/CLI_CONTRACT.md`** gains an "Error code reference" section (35 typed
   codes + exit codes + retryable / hint), with `<!-- ERROR_REFERENCE_START -->`
   markers and CI parity test (`errors_doc_test.go`) — every new typed
   code in `AllCodes()` must be documented or CI fails.
@@ -359,7 +359,7 @@ CLI history before v0.3 is recorded in the project root
   and `operation.cancelled` alongside the existing groupings.
 - `cli/README.md` gains a "Status / check verb pair" subtable under "Health
   check" and a `doc wait` paragraph with full exit-code list (0/1/124/130).
-- `cli/AGENTS.md` gains design SOPs for **Status / check verb pair pattern**
+- `cli/CLI_CONTRACT.md` gains design SOPs for **Status / check verb pair pattern**
   and **Long-poll wait commands**, plus a note on the SetAgentHelp pattern
   and current coverage (chat / kb list).
 - **Multi-id delete partial-failure exit code**: `doc delete` /
@@ -464,11 +464,11 @@ CLI history before v0.3 is recorded in the project root
   back to `weknora api` with a custom filter.
 
 #### Changed
-- `cli/AGENTS.md` MCP curation rationale rewritten: curated read-only
+- `cli/CLI_CONTRACT.md` MCP curation rationale rewritten: curated read-only
   is a deliberate product call gated on the absence of server-side
   per-token scope. When server-side scope ships, mutation tools can
   land in the MCP surface.
-- `cli/AGENTS.md` adds "Command surface design SOP" and "CRUD command
+- `cli/CLI_CONTRACT.md` adds "Command surface design SOP" and "CRUD command
   flag canon" sections for future contributors. The design-SOP
   section includes a step reminding contributors to decide
   flag-vs-escape-hatch per field rather than trying to flag-mirror
@@ -516,7 +516,7 @@ CLI history before v0.3 is recorded in the project root
   `/auth/me` before persisting, and prints an advisory if the keyring
   is unavailable and credentials fall back to a 0600 file under
   `$XDG_CONFIG_HOME/weknora/secrets/`.
-- AGENTS.md rewritten as a developer guide (~170 lines, 6 H2 sections).
+- CLI_CONTRACT.md rewritten as a developer guide (~170 lines, 6 H2 sections).
 
 ### v0.3 — extended management surface and a `session` subtree
 

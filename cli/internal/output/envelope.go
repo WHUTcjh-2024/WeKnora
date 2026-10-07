@@ -8,7 +8,7 @@ import (
 	"io"
 )
 
-// Envelope is the success-path stdout envelope. See AGENTS.md
+// Envelope is the success-path stdout envelope. See CLI_CONTRACT.md
 // "Stdout (success path)" for the full wire contract.
 type Envelope struct {
 	OK bool `json:"ok"`
@@ -23,7 +23,7 @@ type Envelope struct {
 	Profile string `json:"profile,omitempty"`
 }
 
-// ErrorEnvelope is the error-path stderr envelope. See AGENTS.md
+// ErrorEnvelope is the error-path stderr envelope. See CLI_CONTRACT.md
 // "Stderr (error path)" for the full wire contract.
 type ErrorEnvelope struct {
 	OK    bool       `json:"ok"`

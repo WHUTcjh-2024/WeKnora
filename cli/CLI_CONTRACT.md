@@ -1,4 +1,4 @@
-# AGENTS.md
+# WeKnora CLI contract
 
 This is the WeKnora CLI (`weknora`), a command-line client for the WeKnora RAG server. The module path is `github.com/Tencent/WeKnora/cli`.
 
@@ -6,9 +6,8 @@ The wire contract for AI agents *consuming* `weknora` output (JSON shape, exit c
 
 ## Wire contract for AI agents
 
-This CLI's primary consumers include AI agents (Claude Code, Cursor, Gemini CLI,
-etc.). Output format is the agent-facing API. **Every error message and every
-JSON field you write becomes part of an agent's decision-making input.**
+This CLI serves AI agents and scripted clients. Output format is the client-facing API.
+**Every error message and every JSON field can affect a client's next action.**
 
 ### Stdout (success path)
 

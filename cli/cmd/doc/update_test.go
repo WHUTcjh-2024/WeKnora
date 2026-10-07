@@ -105,7 +105,7 @@ func TestDocUpdate_DryRun_NoServerCall(t *testing.T) {
 
 // TestDocUpdate_RequiresConfirmation asserts that without -y (non-TTY / JSON
 // mode), doc update returns input.confirmation_required (exit 10) — parity with
-// kb/agent update gating (AGENTS.md §3.1: all three updates are confirmation-gated).
+// kb/agent update gating (CLI_CONTRACT.md §3.1: all three updates are confirmation-gated).
 func TestDocUpdate_RequiresConfirmation(t *testing.T) {
 	iostreams.SetForTest(t) // non-TTY
 	f := &cmdutil.Factory{
